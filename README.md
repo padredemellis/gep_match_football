@@ -81,18 +81,3 @@ goal = Goal(
 print(goal.is_valid())
 print(goal.to_dict())
 ```
-
-## Desarrollo
-
-- Se usa `events.py` y `match.py` en la raiz como compatibilidad con imports legacy.
-- Para agregar un evento nuevo:
-  1. Crear clase que herede de `Event` en el modulo correcto.
-  2. Definir `event_type` fijo en el constructor.
-  3. Implementar validaciones y serializacion si tiene campos propios.
-  4. Exportarlo en `gep/events/__init__.py`.
-
-## Estado actual
-
-- Proyecto modularizado
-- Demo ejecutable
-- Repositorio conectado a GitHub
