@@ -75,7 +75,9 @@ Puedes editar el diccionario `TEAMS` dentro de `gep/main.py` para definir nuevos
 Dentro de `gep/main.py`, la función `build_match_script()` define en qué minuto ocurre qué tipo de secuencia. Puedes agregar o quitar eventos modificando esta lista:
 ```python
 # Ejemplo: Forzar un gol en el minuto 10
-script.append((10, lambda: generate_goal_sequence("penarol", 10, "Arezo")))
+def evento_10():
+    return generate_goal_sequence("penarol", 10, "Arezo")
+script.append((10, evento_10))
 ```
 
 ### 3. Crear Nuevos Tipos de Eventos

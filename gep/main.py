@@ -419,105 +419,169 @@ def build_match_script() -> list[tuple[int, callable]]:
     script: list[tuple] = []
 
     # ---- PRIMER TIEMPO ---- #
-    script.append((0, lambda: generate_kickoff("penarol", 0)))
+    def evento_0():
+        return generate_kickoff("penarol", 0)
+    script.append((0, evento_0))
 
     # Primeros minutos — pases y tanteo
+    def crear_evento_pase(t, m):
+        def accion():
+            return generate_passing_sequence(t, m)
+        return accion
+
     for m in range(2, 10, 2):
         team = random.choice(["penarol", "nacional"])
-        script.append((m, lambda t=team, mm=m: generate_passing_sequence(t, mm)))
+        script.append((m, crear_evento_pase(team, m)))
 
-    # Falta de Nacional min 12
-    script.append((12, lambda: generate_foul_sequence("nacional", 12)))
+    def evento_12():
+        return generate_foul_sequence("nacional", 12)
+    script.append((12, evento_12))
 
-    # Tiro de Peñarol min 15
-    script.append((15, lambda: generate_shot_sequence("penarol", 15)))
+    def evento_15():
+        return generate_shot_sequence("penarol", 15)
+    script.append((15, evento_15))
 
-    # Corner de Peñarol min 18
-    script.append((18, lambda: generate_corner_sequence("penarol", 18)))
+    def evento_18():
+        return generate_corner_sequence("penarol", 18)
+    script.append((18, evento_18))
 
     # Más pases / misceláneos
+    def crear_evento_mixto(t, m):
+        def accion():
+            generador = random.choice([generate_passing_sequence, generate_misc_event])
+            return generador(t, m)
+        return accion
+
     for m in range(20, 30, 3):
         team = random.choice(["penarol", "nacional"])
-        script.append((m, lambda t=team, mm=m: random.choice([
-            generate_passing_sequence, generate_misc_event
-        ])(t, mm)))
+        script.append((m, crear_evento_mixto(team, m)))
 
     # GOL de Peñarol — minuto 28 (Arezo abre el marcador)
-    script.append((28, lambda: generate_goal_sequence("penarol", 28, "Arezo")))
+    def evento_28():
+        return generate_goal_sequence("penarol", 28, "Arezo")
+    script.append((28, evento_28))
 
     # Falta de Peñarol min 33
-    script.append((33, lambda: generate_foul_sequence("penarol", 33)))
+    def evento_33():
+        return generate_foul_sequence("penarol", 33)
+    script.append((33, evento_33))
 
     # Tiro de Nacional min 37
-    script.append((37, lambda: generate_shot_sequence("nacional", 37)))
+    def evento_37():
+        return generate_shot_sequence("nacional", 37)
+    script.append((37, evento_37))
 
     # GOL de Peñarol — minuto 41 (L. Fernandez de tiro libre)
-    script.append((41, lambda: generate_goal_sequence("penarol", 41, "L. Fernandez")))
+    def evento_41():
+        return generate_goal_sequence("penarol", 41, "L. Fernandez")
+    script.append((41, evento_41))
 
     # Offside / misc min 43
-    script.append((43, lambda: generate_misc_event("nacional", 43)))
+    def evento_43():
+        return generate_misc_event("nacional", 43)
+    script.append((43, evento_43))
 
     # Tiempo añadido primer tiempo
-    script.append((45, lambda: generate_foul_sequence("nacional", 45)))
+    def evento_45():
+        return generate_foul_sequence("nacional", 45)
+    script.append((45, evento_45))
 
     # ---- SEGUNDO TIEMPO ---- #
-    script.append((46, lambda: generate_kickoff("nacional", 46)))
+    def evento_46():
+        return generate_kickoff("nacional", 46)
+    script.append((46, evento_46))
 
     # Ataque Nacional
-    script.append((50, lambda: generate_shot_sequence("nacional", 50)))
+    def evento_50():
+        return generate_shot_sequence("nacional", 50)
+    script.append((50, evento_50))
 
     # GOL de Nacional — minuto 55 (descuento de Veron Lupi)
-    script.append((55, lambda: generate_goal_sequence("nacional", 55, "Veron Lupi")))
+    def evento_55():
+        return generate_goal_sequence("nacional", 55, "Veron Lupi")
+    script.append((55, evento_55))
 
     # Cambio en Peñarol min 60
-    script.append((60, lambda: generate_substitution("penarol", 60)))
+    def evento_60():
+        return generate_substitution("penarol", 60)
+    script.append((60, evento_60))
 
     # Falta fuerte de Nacional min 63
-    script.append((63, lambda: generate_foul_sequence("nacional", 63)))
+    def evento_63():
+        return generate_foul_sequence("nacional", 63)
+    script.append((63, evento_63))
 
     # Misc events
+    def crear_evento_ataque_o_pase(t, m):
+        def accion():
+            generador = random.choice([
+                generate_shot_sequence, generate_misc_event, generate_passing_sequence
+            ])
+            return generador(t, m)
+        return accion
+
     for m in range(65, 75, 3):
         team = random.choice(["penarol", "nacional"])
-        script.append((m, lambda t=team, mm=m: random.choice([
-            generate_shot_sequence, generate_misc_event, generate_passing_sequence
-        ])(t, mm)))
+        script.append((m, crear_evento_ataque_o_pase(team, m)))
 
     # Cambio en Nacional min 72
-    script.append((72, lambda: generate_substitution("nacional", 72)))
+    def evento_72():
+        return generate_substitution("nacional", 72)
+    script.append((72, evento_72))
 
     # GOL de Peñarol — minuto 78 (Arezo sentencia el clasico con doblete)
-    script.append((78, lambda: generate_goal_sequence("penarol", 78, "Arezo")))
+    def evento_78():
+        return generate_goal_sequence("penarol", 78, "Arezo")
+    script.append((78, evento_78))
 
     # Lesión min 82
-    script.append((82, lambda: [
-        Injury(
-            event_id=_eid(), timestamp=_ts(82),
-            player_id="Remedi", team_id="penarol",
-            minute=82, game_session_id=SESSION_ID,
-            location_in_the_field="mediocampo_centro",
-        ),
-        *generate_substitution("penarol", 82),
-    ]))
+    def evento_82():
+        eventos = [
+            Injury(
+                event_id=_eid(), timestamp=_ts(82),
+                player_id="Remedi", team_id="penarol",
+                minute=82, game_session_id=SESSION_ID,
+                location_in_the_field="mediocampo_centro",
+            )
+        ]
+        eventos.extend(generate_substitution("penarol", 82))
+        return eventos
+    script.append((82, evento_82))
 
     # VAR Review min 85 — se anula posible gol de Nacional
-    script.append((85, lambda: [
-        VarReview(
-            event_id=_eid(), timestamp=_ts(85),
-            player_id="Veron Lupi", team_id="nacional",
-            minute=85, game_session_id=SESSION_ID,
-            location_in_the_field="area_rival",
-        )
-    ]))
+    def evento_85():
+        return [
+            VarReview(
+                event_id=_eid(), timestamp=_ts(85),
+                player_id="Veron Lupi", team_id="nacional",
+                minute=85, game_session_id=SESSION_ID,
+                location_in_the_field="area_rival",
+            )
+        ]
+    script.append((85, evento_85))
 
     # Últimos minutos tensos
-    script.append((87, lambda: generate_foul_sequence("nacional", 87)))
-    script.append((89, lambda: generate_shot_sequence("nacional", 89)))
+    def evento_87():
+        return generate_foul_sequence("nacional", 87)
+    script.append((87, evento_87))
+
+    def evento_89():
+        return generate_shot_sequence("nacional", 89)
+    script.append((89, evento_89))
 
     # Tiempo añadido — Peñarol aguanta
-    script.append((90, lambda: generate_misc_event("penarol", 90)))
-    script.append((92, lambda: generate_foul_sequence("penarol", 92)))
+    def evento_90():
+        return generate_misc_event("penarol", 90)
+    script.append((90, evento_90))
 
-    script.sort(key=lambda x: x[0])
+    def evento_92():
+        return generate_foul_sequence("penarol", 92)
+    script.append((92, evento_92))
+
+    def ordenar_por_minuto(elemento):
+        return elemento[0]
+
+    script.sort(key=ordenar_por_minuto)
     return script
 
 
