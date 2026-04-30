@@ -1,5 +1,5 @@
-from typing import Any
-from base import Event
+from typing import Any, Optional
+from gep.events.base import Event
 
 
 class EventQueue:

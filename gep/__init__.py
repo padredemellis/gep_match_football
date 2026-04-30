@@ -1,51 +1,7 @@
-from .events import (
-    CornerKick,
-    Dribble,
-    Event,
-    Foul,
-    FreeKick,
-    Goal,
-    GoalkeeperSave,
-    GoalKick,
-    DisallowedGoal,
-    ExtraTimeOrPenaltyShootout,
-    Interception,
-    KickOff,
-    Injury,
-    Offside,
-    PassEvent,
-    Penalty,
-    RedCard,
-    Shot,
-    VarReview,
-    Substitution,
-    ThrowIn,
-    YellowCard,
-)
-from .match import Match
+"""
+GEP – Game Events Provider para fútbol.
+"""
 
-__all__ = [
-    "Event",
-    "KickOff",
-    "Goal",
-    "Foul",
-    "YellowCard",
-    "RedCard",
-    "PassEvent",
-    "FreeKick",
-    "Penalty",
-    "CornerKick",
-    "ThrowIn",
-    "GoalKick",
-    "Interception",
-    "Dribble",
-    "GoalkeeperSave",
-    "Injury",
-    "VarReview",
-    "DisallowedGoal",
-    "ExtraTimeOrPenaltyShootout",
-    "Offside",
-    "Substitution",
-    "Shot",
-    "Match",
-]
+from .events import *  # noqa: F401, F403
+from .dispatcher import EventDispatcher  # noqa: F401
+from .queue import EventQueue  # noqa: F401
