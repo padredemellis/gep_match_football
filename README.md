@@ -6,7 +6,7 @@ El sistema genera eventos estocásticos (como pases, tiros, goles, faltas) para 
 
 ---
 
-## 🏗️ Arquitectura del Sistema
+## Arquitectura del Sistema
 
 La aplicación está diseñada usando un patrón de Publicador/Suscriptor (Pub/Sub) para desacoplar la generación de los eventos de su procesamiento.
 
@@ -43,7 +43,7 @@ flowchart TD
 
 ---
 
-## 🚀 Manual de Uso
+## Manual de Uso
 
 ### Requisitos Previos
 - Python 3.9 o superior.
@@ -66,7 +66,7 @@ python gep/main.py
 
 ---
 
-## 🛠️ Cómo Extender y Personalizar
+##  Cómo Extender y Personalizar
 
 ### 1. Cambiar los Equipos y Alineaciones
 Puedes editar el diccionario `TEAMS` dentro de `gep/main.py` para definir nuevos equipos, cambiar los nombres, formaciones y jugadores titulares/suplentes.
@@ -99,7 +99,7 @@ time.sleep(5)  # Cambiar 5 por el número de segundos deseado
 
 ---
 
-## 📄 Estructura de Directorios
+## Estructura de Directorios
 
 ```text
 gep_match_football/
