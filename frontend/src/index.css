@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+:root {
+  --pitch-color: #4CAF50;
+  --pitch-line: #ffffff;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #1a202c;
+  color: #fff;
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+}

@@ -44,6 +44,11 @@ from gep.events import (
     VarReview,
 )
 
+try:
+    from gep.api.event_emitter import EventEmitter
+except ImportError:
+    EventEmitter = None
+
 # ------------------------------------------------------------------ #
 #  Datos del partido
 # ------------------------------------------------------------------ #
@@ -589,7 +594,7 @@ def build_match_script() -> list[tuple[int, callable]]:
 #  Simulación principal
 # ------------------------------------------------------------------ #
 
-def main():
+def run_simulation_async(ws_manager=None):
     print("=" * 60)
     print("GEP - SIMULACION DE PARTIDO DE FUTBOL")
     print("=" * 60)
@@ -618,6 +623,10 @@ def main():
 
     dispatcher.subscribe("*", narrator.narrate)
     dispatcher.subscribe("*", stats.track)
+    
+    if ws_manager and EventEmitter:
+        emitter = EventEmitter(ws_manager)
+        dispatcher.subscribe("*", emitter.handle_event)
 
     # Handler especial para goles: actualiza el score del partido
     def on_goal(event):
@@ -695,6 +704,17 @@ def main():
     # 5. Estadísticas
     stats.print_summary()
 
+    if ws_manager:
+        ws_manager.broadcast_from_sync({
+            "type": "match_finished",
+            "data": {
+                "stats": stats.stats,
+                "score_home": match.score_team_1,
+                "score_away": match.score_team_2,
+                "winner": winner
+            }
+        })
+
     # 6. Resumen del dispatcher
     print(f"\n  {dispatcher}")
     history = dispatcher.get_history()
@@ -705,6 +725,16 @@ def main():
     print(f"  Tiros: {len(dispatcher.get_history_by_type('shot'))}")
     print(f"  Pases: {len(dispatcher.get_history_by_type('pass'))}")
 
+
+def main():
+    import asyncio
+    from gep.api.server import main_server
+    # Lanzamos el servidor WebSocket por defecto. 
+    # La simulación arrancará al recibir el comando START_SIMULATION
+    try:
+        asyncio.run(main_server())
+    except KeyboardInterrupt:
+        print("\nServidor detenido.")
 
 if __name__ == "__main__":
     main()
